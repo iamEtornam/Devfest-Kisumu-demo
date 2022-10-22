@@ -3,65 +3,54 @@ import 'package:devfest_kisumu_demo/repositories/post_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class PostMockRepository extends Mock implements PostRepositoryImpl {}
+class MockPostRepository extends Mock implements PostRepositoryImpl {}
 
-late PostMockRepository? postMockRepository;
+// late MockPostRepository? mockPostRepository;
 void main() {
-  setUpAll(() {
-    postMockRepository = PostMockRepository();
-  });
+  //setupall
+  //teardownall
+  //setup
+  //teardown
+  // setUpAll(() {
+  //   mockPostRepository = MockPostRepository();
+  // });
 
-  tearDownAll(() {
-    postMockRepository = null;
-  });
+  // tearDownAll(() {
+  //   mockPostRepository = null;
+  // });
 
-  test('get posts should work', () async {
-    when(() => postMockRepository!.getPostService()).thenAnswer((_) => Future.value([
-          Post('1', 'some text here', 'image url', 2, [], '22-10-2022',
-              User('1', 'Mr', 'Etornam', 'Sunu', 'pic here'))
-        ]));
-
-    final posts = await postMockRepository!.getPostService();
-
-    expect(posts.isNotEmpty, true);
-
-    expect(posts.length, 1);
-
-    expect(posts, isA<List<Post>>());
-  });
-
+  ///test to get all posts
   test('get all post should work', () async {
-    when(() => postMockRepository!.getPostService()).thenAnswer((_) {
-      final user = User.fromJson({
-        'id': '',
-        'title': '',
-        'firstName': '',
-        'lastName': '',
-        'picture': '',
-      });
-      final post = Post.fromJson({
-        'id': '',
-        'text': '',
-        'image': '',
-        'likes': 10,
-        'link': '',
-        'tags': [],
-        'publishDate': DateTime.now().toIso8601String(),
-        'owner': user.toJson(),
-      });
-      return Future.value([
-        post,
-        post,
-        post,
-      ]);
+    final mockPostRepo = MockPostRepository();
+    final user = User.fromJson({
+      'id': '',
+      'title': '',
+      'firstName': '',
+      'lastName': '',
+      'picture': '',
     });
 
-    final posts = await postMockRepository!.getPostService();
+    final post = Post.fromJson({
+      'id': '1',
+      'text': '',
+      'image': '',
+      'likes': 12,
+      'tags': [],
+      'publishDate': DateTime.now().toIso8601String(),
+      'owner': user.toJson()
+    });
 
-    expect(posts.isNotEmpty, true);
+    when(() => mockPostRepo.getPostService()).thenAnswer((_) => Future.value([
+          post,
+          post,
+          post,
+          post,
+        ]));
 
-    expect(posts.length, 3);
+    final posts = await mockPostRepo.getPostService();
 
+    expect(posts.isEmpty, false);
+    expect(posts.length, 4);
     expect(posts, isA<List<Post>>());
   });
 }
